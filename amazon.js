@@ -1,33 +1,3 @@
-function parseHtmlAndCalcSumByIndividual(html) {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(html, "text/html");
-    var sum = 0;
-    var priceCollection = doc.getElementsByClassName('a-color-price');
-    if(orderCollection.length == 0) return Promise.reject("no order");
-    Array.prototype.forEach.call(priceCollection, function(item) {
-        var price = Number(item.innerText.replace("￥", "").replace(",", ""));
-        if(Number.isNaN(price)) { console.log('NaN is detected.'); } else sum += price;
-    });
-    console.log(sum);
-    return sum;
-}
-
-function parseHtmlAndCalcSumByTotal(html) {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(html, "text/html");
-    var sum = 0;
-    var orderCollection = doc.querySelectorAll('div.order');
-    if(orderCollection.length == 0) return Promise.reject("no order");
-    Array.prototype.forEach.call(orderCollection, function(order) {
-        var price = Number(order.querySelectorAll('div.order-info span.value')[1].innerText.replace("￥", "").replace(",", ""));
-        if(Number.isNaN(price)) {
-          console.log('NaN is detected.');
-        } else sum += price;
-    });
-    console.log(sum);
-    return sum;
-}
-
 async function getPriceYearPageSum(year, page, parseFunc) {
     const url = 'https://www.amazon.co.jp/gp/css/order-history?digitalOrders=1&unifiedOrders=1&orderFilter=year-' + year + '&startIndex=' + page * 10;
     const result = await fetch(url, {credentials: "include"});
@@ -62,6 +32,7 @@ function parseHtmlAndCalcSum(html) {
             const titleCollection = item.getElementsByClassName("a-link-normal");
             if(titleCollection.length != 1) { console.log(titleCollection) }
             if(titleCollection.length < 1) { console.log("somethin wrong"); return }
+
             const title = titleCollection[0].innerText;
             const matched = /数量：([0-9]+)/.exec(title);
             var count = (matched != null && matched.length == 2) ? Number(matched[1]) : 1;
@@ -80,6 +51,3 @@ function parseHtmlAndCalcSum(html) {
     console.log(sum);
     return sum;
 }
-
-document.querySelectorAll('div.order')
-document.querySelectorAll('div.order').item(0).querySelectorAll('div.order-info span.value')[1].innerText.replace("￥", "").replace(",", "")
